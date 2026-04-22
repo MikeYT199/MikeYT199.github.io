@@ -1,0 +1,167 @@
+<%- include('partials/header') %>
+
+<!-- HERO / PERFIL -->
+<section id="perfil" class="hero-section">
+  <div class="hero-bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+  <div class="container">
+    <div class="row align-items-center min-vh-85">
+      <!-- Avatar -->
+      <div class="col-lg-4 text-center mb-5 mb-lg-0" data-aos="fade-right">
+        <div class="avatar-wrapper">
+          <div class="avatar-ring">
+            <img src="<%= perfil.avatar %>" alt="<%= perfil.nombre %>" class="avatar-img">
+          </div>
+          <div class="avatar-status"><i class="bi bi-circle-fill"></i> Disponible</div>
+        </div>
+      </div>
+      <!-- Info -->
+      <div class="col-lg-8" data-aos="fade-left">
+        <div class="perfil-card">
+          <span class="perfil-badge"><i class="bi bi-patch-check-fill me-1"></i>Perfil Verificado</span>
+          <h1 class="perfil-nombre"><%= perfil.nombre %></h1>
+          <p class="perfil-titulo"><%= perfil.titulo %></p>
+          <p class="perfil-descripcion"><%= perfil.descripcion %></p>
+
+          <div class="perfil-meta row g-3 mb-4">
+            <div class="col-auto">
+              <span class="meta-item"><i class="bi bi-geo-alt-fill"></i> <%= perfil.ubicacion %></span>
+            </div>
+            <div class="col-auto">
+              <span class="meta-item"><i class="bi bi-envelope-fill"></i> <%= perfil.email %></span>
+            </div>
+            <div class="col-auto">
+              <span class="meta-item"><i class="bi bi-globe2"></i> <%= perfil.website %></span>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-row">
+            <div class="stat-box">
+              <span class="stat-num"><%= perfil.stats.fotos %></span>
+              <span class="stat-label">Fotos</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-box">
+              <span class="stat-num"><%= perfil.stats.seguidores.toLocaleString() %></span>
+              <span class="stat-label">Seguidores</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-box">
+              <span class="stat-num"><%= perfil.stats.siguiendo %></span>
+              <span class="stat-label">Siguiendo</span>
+            </div>
+          </div>
+
+          <div class="perfil-actions mt-4">
+            <a href="/contactos" class="btn btn-primary-custom">
+              <i class="bi bi-person-plus me-2"></i>Conectar
+            </a>
+            <a href="/#albums" class="btn btn-outline-custom">
+              <i class="bi bi-images me-2"></i>Ver Álbumes
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ÁLBUMES -->
+<section id="albums" class="albums-section">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <span class="section-tag">Galería</span>
+      <h2 class="section-title">Mis Álbumes</h2>
+      <p class="section-subtitle">Colecciones de momentos que merecen ser recordados</p>
+    </div>
+
+    <div class="row g-4">
+      <% albums.forEach(function(album) { %>
+      <div class="col-lg-6 col-xl-3">
+        <div class="album-card" data-album-id="<%= album.id %>">
+          <!-- Cover -->
+          <div class="album-cover">
+            <img src="<%= album.portada %>" alt="<%= album.titulo %>" loading="lazy">
+            <div class="album-overlay">
+              <a href="/album/<%= album.id %>" class="btn-ver-album">
+                <i class="bi bi-eye me-1"></i>Ver Álbum
+              </a>
+            </div>
+            <span class="album-count"><i class="bi bi-images me-1"></i><%= album.fotos.length %> fotos</span>
+          </div>
+          <!-- Info -->
+          <div class="album-info">
+            <h3 class="album-titulo"><%= album.titulo %></h3>
+            <p class="album-desc"><%= album.descripcion %></p>
+            <div class="album-footer">
+              <!-- Reacción Me Gusta -->
+              <button class="like-btn" data-tipo="album" data-id="<%= album.id %>" data-liked="false">
+                <i class="bi bi-heart like-icon"></i>
+                <span class="like-count"><%= album.likes %></span>
+              </button>
+              <!-- Favorito -->
+              <button class="fav-btn" data-tipo="album" data-id="<%= album.id %>"
+                data-titulo="<%= album.titulo %>"
+                data-url="<%= album.portada %>"
+                data-album="<%= album.titulo %>" title="Guardar en favoritos">
+                <i class="bi bi-bookmark fav-icon"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- PREVIEW FOTOS RECIENTES -->
+<section class="fotos-recientes-section">
+  <div class="container">
+    <div class="section-header text-center mb-5">
+      <span class="section-tag">Destacadas</span>
+      <h2 class="section-title">Fotos Recientes</h2>
+    </div>
+    <div class="fotos-grid">
+      <% let contador = 0;
+         albums.forEach(function(album) {
+           album.fotos.slice(0, 1).forEach(function(foto) {
+             if(contador < 6) { %>
+      <div class="foto-item" data-aos="zoom-in">
+        <img src="<%= foto.url %>" alt="<%= foto.titulo %>" loading="lazy">
+        <div class="foto-overlay">
+          <p class="foto-titulo"><%= foto.titulo %></p>
+          <div class="foto-actions">
+            <button class="like-btn like-btn-sm" data-tipo="foto" data-id="<%= foto.id %>" data-liked="false">
+              <i class="bi bi-heart like-icon"></i>
+              <span class="like-count"><%= foto.likes %></span>
+            </button>
+            <button class="fav-btn fav-btn-sm" data-tipo="foto" data-id="<%= foto.id %>"
+              data-titulo="<%= foto.titulo %>"
+              data-url="<%= foto.url %>"
+              data-album="<%= album.titulo %>">
+              <i class="bi bi-bookmark fav-icon"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <% contador++; } }); }); %>
+    </div>
+  </div>
+</section>
+
+<!-- TOAST NOTIFICATION -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+  <div id="notifToast" class="toast align-items-center" role="alert">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMessage">Acción realizada</div>
+      <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

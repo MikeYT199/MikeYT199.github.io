@@ -1,0 +1,107 @@
+<%- include('partials/header') %>
+
+<section class="contactos-section py-5">
+  <div class="container">
+    <!-- Header -->
+    <div class="section-header text-center mb-5">
+      <span class="section-tag">Red</span>
+      <h1 class="section-title">Mis Contactos</h1>
+      <p class="section-subtitle">Gestiona tus conexiones — búsqueda y filtrado en tiempo real con AJAX</p>
+    </div>
+
+    <!-- Barra de herramientas -->
+    <div class="contactos-toolbar mb-4">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-5">
+          <div class="search-box">
+            <i class="bi bi-search search-icon"></i>
+            <input type="text" id="buscarContacto" class="form-control search-input"
+              placeholder="Buscar por nombre o email...">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <select id="filtroTipo" class="form-select custom-select">
+            <option value="todos">Todos los tipos</option>
+            <option value="Amiga">Amigos</option>
+            <option value="Colega">Colegas</option>
+            <option value="Cliente">Clientes</option>
+            <option value="Familiar">Familiares</option>
+            <option value="Otro">Otros</option>
+          </select>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#modalNuevoContacto">
+            <i class="bi bi-person-plus-fill me-2"></i>Nuevo Contacto
+          </button>
+        </div>
+      </div>
+      <div class="mt-2">
+        <small class="text-muted" id="totalContactos">Cargando contactos...</small>
+      </div>
+    </div>
+
+    <!-- Grid de contactos -->
+    <div id="contactosGrid" class="row g-3">
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2">Cargando contactos...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal Nuevo Contacto -->
+<div class="modal fade" id="modalNuevoContacto" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content custom-modal">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-person-plus-fill me-2"></i>Nuevo Contacto</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div id="formMensaje" class="alert d-none"></div>
+        <div class="mb-3">
+          <label class="form-label">Nombre completo *</label>
+          <input type="text" id="inputNombre" class="form-control custom-input" placeholder="Ej: María García">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email *</label>
+          <input type="email" id="inputEmail" class="form-control custom-input" placeholder="maria@ejemplo.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Teléfono</label>
+          <input type="text" id="inputTelefono" class="form-control custom-input" placeholder="+51 999 999 999">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tipo de contacto</label>
+          <select id="inputTipo" class="form-select custom-select">
+            <option value="Amiga">Amigo/a</option>
+            <option value="Colega">Colega</option>
+            <option value="Cliente">Cliente</option>
+            <option value="Familiar">Familiar</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary-custom" id="btnGuardarContacto">
+          <i class="bi bi-save me-1"></i>Guardar Contacto
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+  <div id="notifToast" class="toast align-items-center" role="alert">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMessage"></div>
+      <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/contactos.js"></script>
+<%- include('partials/footer') %>

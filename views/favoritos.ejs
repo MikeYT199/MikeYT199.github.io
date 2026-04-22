@@ -1,0 +1,106 @@
+<%- include('partials/header') %>
+
+<section class="favoritos-section py-5">
+  <div class="container">
+    <!-- Header -->
+    <div class="section-header text-center mb-5">
+      <span class="section-tag">Colección</span>
+      <h1 class="section-title">Mis Favoritos</h1>
+      <p class="section-subtitle">Todo lo que has guardado en un solo lugar</p>
+    </div>
+
+    <!-- Contenido -->
+    <% if (favoritos.length === 0) { %>
+    <div class="empty-state text-center py-5">
+      <div class="empty-icon"><i class="bi bi-bookmark-heart"></i></div>
+      <h3>Aún no tienes favoritos</h3>
+      <p class="text-muted">Explora los álbumes y guarda las fotos que más te gusten</p>
+      <a href="/#albums" class="btn btn-primary-custom mt-3">
+        <i class="bi bi-images me-2"></i>Explorar Álbumes
+      </a>
+    </div>
+    <% } else { %>
+
+    <div class="favoritos-stats mb-4">
+      <div class="stat-pill">
+        <i class="bi bi-bookmark-fill me-2"></i>
+        <strong><%= favoritos.length %></strong> elementos guardados
+      </div>
+    </div>
+
+    <div id="favoritosGrid" class="row g-4">
+      <% favoritos.forEach(function(fav) { %>
+      <div class="col-sm-6 col-lg-4 col-xl-3 fav-item" data-fav-id="<%= fav.itemId %>" data-fav-tipo="<%= fav.tipo %>">
+        <div class="favorito-card">
+          <div class="favorito-img-wrap">
+            <img src="<%= fav.url %>" alt="<%= fav.titulo %>" loading="lazy">
+            <div class="favorito-tipo-badge"><%= fav.tipo === 'foto' ? '📷 Foto' : '🗂️ Álbum' %></div>
+          </div>
+          <div class="favorito-info">
+            <h4 class="favorito-titulo"><%= fav.titulo %></h4>
+            <p class="favorito-album"><i class="bi bi-folder2 me-1"></i><%= fav.album %></p>
+            <div class="favorito-actions">
+              <% if (fav.tipo === 'foto') { %>
+              <a href="/#albums" class="btn btn-sm btn-outline-custom">
+                <i class="bi bi-eye me-1"></i>Ver
+              </a>
+              <% } else { %>
+              <a href="/album/<%= fav.itemId %>" class="btn btn-sm btn-outline-custom">
+                <i class="bi bi-eye me-1"></i>Ver Álbum
+              </a>
+              <% } %>
+              <button class="btn btn-sm btn-remove-fav"
+                data-id="<%= fav.itemId %>" data-tipo="<%= fav.tipo %>">
+                <i class="bi bi-trash me-1"></i>Quitar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<!-- Toast -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+  <div id="notifToast" class="toast align-items-center" role="alert">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMessage"></div>
+      <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Quitar favorito
+document.querySelectorAll('.btn-remove-fav').forEach(btn => {
+  btn.addEventListener('click', async function() {
+    const id = this.dataset.id;
+    const tipo = this.dataset.tipo;
+    try {
+      const res = await fetch(`/api/favoritos/${id}/${tipo}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        const card = this.closest('.fav-item');
+        card.style.transform = 'scale(0)';
+        card.style.opacity = '0';
+        card.style.transition = 'all 0.3s ease';
+        setTimeout(() => card.remove(), 300);
+        mostrarToast('Eliminado de favoritos', 'warning');
+      }
+    } catch(e) { mostrarToast('Error al procesar', 'danger'); }
+  });
+});
+
+function mostrarToast(msg, tipo = 'success') {
+  const t = document.getElementById('notifToast');
+  const m = document.getElementById('toastMessage');
+  t.className = `toast align-items-center text-bg-${tipo} border-0`;
+  m.textContent = msg;
+  new bootstrap.Toast(t, { delay: 3000 }).show();
+}
+</script>
+
+<%- include('partials/footer') %>
